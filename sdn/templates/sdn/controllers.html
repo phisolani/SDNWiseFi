@@ -1,0 +1,43 @@
+{% extends "sdn/base-home.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-auto mr-auto">
+                <h2>Controllers</h2>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'sdn:controller-new' %}" class="btn btn-outline-primary" role="button"><i class="fa fa-plus"></i> New Controller</a>
+            </div>
+        </div>
+        {% if controllers %}
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">IP Addr</th>
+                    <th scope="col">Port</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for controller in controllers %}
+                    <tr>
+                        <td>{{ controller.name }}</td>
+                        <td>{{ controller.ip_addr }}</td>
+                        <td>{{ controller.port }}</td>
+                        <td>{{ controller.get_controller_type_display }}</td>
+                        <td class="text-center" id="td_actions">
+                            <a class="btn btn-outline-primary" href="{% url 'sdn:controller-update' controller.id %}"><i class="fa fa-edit"></i></a>&nbsp;
+                            <a class="btn btn-outline-danger" href="{% url 'sdn:controller-delete' controller.id %}"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No controllers available.</p>
+        {% endif %}
+
+    </div>
+{% endblock %}

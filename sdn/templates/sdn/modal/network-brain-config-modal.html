@@ -1,0 +1,245 @@
+<div class="modal fade" id="networkBrainModal" tabindex="-1" role="dialog"
+     aria-labelledby="networkBrainModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="networkBrainModalLabel">Network Brain Management Panel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="div_response_message_brain_config" class="alert" role="alert">
+                    <p id="p_message_response_brain_config"></p>
+                </div>
+
+                <ul class="nav nav-tabs mb-3" id="pills-brain-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-adaptive-slicing-tab" data-toggle="pill" href="#pills-adaptive-slicing"
+                           role="tab"
+                           aria-controls="pills-adaptive-slicing" aria-selected="true">Adaptive slicing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-mcda-handover-tab" data-toggle="pill" href="#pills-mcda-handover"
+                           role="tab"
+                           aria-controls="pills-mcda-handover" aria-selected="true">MCDA-based handover</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-brain-tab-content">
+                    <div class="tab-pane fade show active" id="pills-adaptive-slicing" role="tabpanel"
+                         aria-labelledby="pills-adaptive-slicing-tab">
+                        <form id="form_send_adaptive_slicing_config" method="POST"> {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="inputAdaptiveSlicingAPP">Application identifier</label>
+                                    <input type="text" class="form-control"
+                                           id="inputAdaptiveSlicingAPP" placeholder="empower.apps.managers.<APP>" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="inputAdaptiveSlicingToggle" data-toggle="toggle">
+                            </div>
+                            <div  id="div_adaptive_slicing_fields">
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="inputAdaptiveSlicingMinQuantum">Min. Quantum (us)</label>
+                                        <input type="number" min="1" max="12000" class="form-control"
+                                               id="inputAdaptiveSlicingMinQuantum" placeholder="10 (us)">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="inputAdaptiveSlicingMaxQuantum">Max. Quantum (us)</label>
+                                        <input type="number" min="1" max="12000" class="form-control"
+                                               id="inputAdaptiveSlicingMaxQuantum" placeholder="12000 (us)">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="inputAdaptiveSlicingIncRate">Inc. Rate</label>
+                                        <input type="number" min="0" max="1" step=".1" class="form-control"
+                                               id="inputAdaptiveSlicingIncRate" placeholder="0,1">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="inputAdaptiveSlicingDecRate">Dec. Rate</label>
+                                        <input type="number" min="0" max="1" step=".1" class="form-control"
+                                               id="inputAdaptiveSlicingDecRate" placeholder="0,1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><i
+                                        class="fa fa-times"></i>&nbsp;Close
+                                </button>
+                                <button type="submit" class="btn btn-outline-info"><i
+                                        class="fa fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade show" id="pills-mcda-handover" role="tabpanel"
+                         aria-labelledby="pills-mcda-handover-tab">
+                        <form id="form_send_mcda_config" method="POST"> {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="inputMCDAHandoverAPP">Application identifier</label>
+                                    <input type="text" class="form-control"
+                                           id="inputMCDAHandoverAPP" placeholder="empower.apps.managers.<APP>" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="inputMCDAToggle" data-toggle="toggle">
+                            </div>
+                            <div id="div_mcda_fields">
+                                <div class="form-group">
+                                    <small id="passwordHelpBlock" class="form-text text-muted">
+                                        Weights are values from 0 to 1 comprising the percentage of importance of a
+                                        criterion in the decision-making process.
+                                    </small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                QoS Weights
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="inputQoSChannelLoadRate"
+                                                           class="col-sm-6 col-form-label">Channel
+                                                        load rate</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputQoSChannelLoadRate" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputQoSRSSI"
+                                                           class="col-sm-6 col-form-label">RSSI</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputQoSRSSI" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputQoSExpectedLoad" class="col-sm-6 col-form-label">Expected
+                                                        load</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputQoSExpectedLoad" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputQoSMeasuredLoad" class="col-sm-6 col-form-label">Measured
+                                                        load</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputQoSMeasuredLoad" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputQoSQueueingDelay" class="col-sm-6 col-form-label">Queueing
+                                                        delay</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputQoSQueueingDelay" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputQoSAssociationStatus"
+                                                           class="col-sm-6 col-form-label">Association Status</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputQoSAssociationStatus" placeholder="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                BE Weights
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="inputBEChannelLoadRate" class="col-sm-6 col-form-label">Channel
+                                                        load rate</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputBEChannelLoadRate" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputBERSSI"
+                                                           class="col-sm-6 col-form-label">RSSI</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputBERSSI" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputBEExpectedLoad" class="col-sm-6 col-form-label">Expected
+                                                        load</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputBEExpectedLoad" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputBEMeasuredLoad" class="col-sm-6 col-form-label">Measured
+                                                        load</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputBEMeasuredLoad" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputBEQueueingDelay" class="col-sm-6 col-form-label">Queueing
+                                                        delay</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputBEQueueingDelay" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputBEAssociationStatus"
+                                                           class="col-sm-6 col-form-label">Association Status</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" max="1" step=".01"
+                                                               class="form-control"
+                                                               id="inputBEAssociationStatus" placeholder="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><i
+                                        class="fa fa-times"></i>&nbsp;Close
+                                </button>
+                                <button type="submit" class="btn btn-outline-info"><i
+                                        class="fa fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

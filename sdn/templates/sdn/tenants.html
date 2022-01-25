@@ -1,0 +1,41 @@
+{% extends "sdn/base-home.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-auto mr-auto">
+                <h2>Tenants</h2>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'sdn:tenant-new' %}" class="btn btn-outline-primary" role="button"><i class="fa fa-plus"></i> New Tenant</a>
+            </div>
+        </div>
+        {% if tenants %}
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Long ID</th>
+                    <th scope="col">Controller</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for tenant in tenants %}
+                    <tr>
+                        <td>{{ tenant.name }}</td>
+                        <td>{{ tenant.long_id }}</td>
+                        <td>{{ tenant.controller }}</td>
+                        <td class="text-center" id="td_actions">
+                            <a class="btn btn-outline-primary" href="{% url 'sdn:tenant-update' tenant.id %}"><i class="fa fa-edit"></i></a>&nbsp;
+                            <a class="btn btn-outline-danger" href="{% url 'sdn:tenant-delete' tenant.id %}"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tenants available.</p>
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "sdn/base-home.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-auto mr-auto">
+                <h2>Interactive Graphs</h2>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'sdn:graph-new' %}" class="btn btn-outline-primary" role="button"><i class="fa fa-plus"></i> New Interactive Graph</a>
+            </div>
+        </div>
+        {% if graphs %}
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Iframe URL</th>
+                    <th scope="col">Controller</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for graph in graphs %}
+                    <tr>
+                        <td>{{ graph.name }}</td>
+                        <td>{{ graph.get_graph_type_display }}</td>
+                        <td>{{ graph.iframe_url }}</td>
+                        <td>{{ graph.controller }}</td>
+                        <td class="text-center" id="td_actions">
+                            <a class="btn btn-outline-primary" href="{% url 'sdn:graph-update' graph.id %}"><i class="fa fa-edit"></i></a>&nbsp;
+                            <a class="btn btn-outline-danger" href="{% url 'sdn:graph-delete' graph.id %}"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No graphs available.</p>
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,52 @@
+/*li a {*/
+/*    color: rebeccapurple;*/
+/*}*/
+
+#my_network {
+    width: 100%;
+    height: 500px;
+}
+
+#my_legend {
+    width: 100%;
+    max-height: 40px;
+}
+
+p {
+    max-width: 500px;
+}
+
+h4 {
+    margin-bottom: 3px;
+}
+
+.embed-responsive-16by9 {
+    max-height: 300px;
+}
+
+#row_top {
+    width: 100%;
+    position: absolute;
+    top: 100px;
+    z-index: 10;
+}
+
+#div_tenant_selector {
+    padding-left: 50px;
+}
+
+#td_actions {
+    white-space: nowrap;
+}
+
+#div_config_button {
+    padding-right: 50px;
+}
+
+.table-fixed td {
+  white-space: normal !important;
+  word-wrap: break-word;
+}
+.table-fixed {
+    table-layout: fixed;
+}

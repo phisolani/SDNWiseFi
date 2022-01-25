@@ -1,0 +1,184 @@
+{% extends "sdn/base-home.html" %}
+{% load static %}
+{% block content %}
+    {% include "sdn/modal/network-monitoring-config-modal.html" %}
+    {% include "sdn/modal/network-management-config-modal.html" %}
+    {% include "sdn/modal/network-brain-config-modal.html" %}
+    <script type="text/javascript" src="{% static 'sdn/js/config-handler.js' %}"></script>
+    {% comment %}<h2 class="mt-5">Topology View</h2>{% endcomment %}
+    <div id="row_top" class="row">
+        {#                <div id="div_polling_interval" class="col-md-3 ml-md-auto text-right">.col-md-3 .ml-md-auto</div>#}
+        <div id="div_tenant_selector" class="col">
+            <div class="form-inline">
+                <label for="tenant_selector" class="col-form-label">Selected Tenant</label>
+                <div class="col">
+                    <select id="tenant_selector" class="custom-select">
+                        {% for crr_tenant in tenants %}
+                            {% if tenant == crr_tenant %}
+                                <option selected value={% url 'sdn:tenant-visualization' crr_tenant.id %}>{{ crr_tenant.name }}</option>
+                            {% else %}
+                                <option value={% url 'sdn:tenant-visualization' crr_tenant.id %}>{{ crr_tenant.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="my_legend" class="col-6">
+        </div>
+        <div id='div_config_button' class="col-2 text-right">
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#networkMonitoringModal">
+                <i class="fa fa-sliders-h"></i></button>
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#networkManagementModal">
+                <i class="fa fa-bezier-curve"></i></button>
+            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#networkBrainModal">
+                <i class="fa fa-brain"></i></button>
+            {#            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#">#}
+            {#                <i class="fa fa-dharmachakra"></i></button>#}
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'sdn/js/vis-network.min.js' %}"></script>
+    <div class="bg-light container-fluid" id="my_network"></div>
+    <script type="text/javascript" src="{% static 'sdn/js/data-plane-view.js' %}"></script>
+    {% if tenant.controller.graph_set.all %}
+        <ul class="nav nav-tabs mb-3" id="pills-graphs-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-graphs-home-tab" data-toggle="pill" href="#pills-graphs-all" role="tab"
+                   aria-controls="pills-graphs-all" aria-selected="true">All Graphs</a>
+            </li>
+            {% if tenant.get_association_graphs %}
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-graphs-user-association-tab" data-toggle="pill"
+                       href="#pills-graphs-user-association"
+                       role="tab"
+                       aria-controls="pills-graphs-user-association" aria-selected="false">User Association Graphs</a>
+                </li>
+            {% endif %}
+            {% if tenant.get_int_graphs %}
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-graphs-application-tab" data-toggle="pill" href="#pills-graphs-int" role="tab"
+                       aria-controls="pills-graphs-int" aria-selected="false">In-band Network Telemetry Graphs</a>
+                </li>
+            {% endif %}
+            {% if tenant.get_throughput_graphs %}
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-graphs-throughput-tab" data-toggle="pill" href="#pills-graphs-throughput" role="tab"
+                       aria-controls="pills-graphs-throughput" aria-selected="false">Throughput Graphs</a>
+                </li>
+            {% endif %}
+            {% if tenant.get_delay_graphs %}
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-graphs-delay-tab" data-toggle="pill" href="#pills-graphs-delay" role="tab"
+                       aria-controls="pills-graphs-delay" aria-selected="false">Delay Graphs</a>
+                </li>
+            {% endif %}
+            {% if tenant.get_mcda_graphs %}
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-graphs-mcda-tab" data-toggle="pill" href="#pills-graphs-mcda" role="tab"
+                       aria-controls="pills-graphs-mcda" aria-selected="false">MCDA Graphs</a>
+                </li>
+            {% endif %}
+            {% if tenant.get_other_graphs %}
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-graphs-other-tab" data-toggle="pill" href="#pills-graphs-other" role="tab"
+                       aria-controls="pills-graphs-other" aria-selected="false">Other Graphs</a>
+                </li>
+            {% endif %}
+        </ul>
+
+        <div class="tab-content" id="pills-graphs-tabContent">
+            <div class="tab-pane fade show active" id="pills-graphs-all" role="tabpanel"
+                 aria-labelledby="pills-graphs-all-tab">
+                {% if tenant.controller.graph_set.all %}
+                    <div class="row">
+                        {% for graph in tenant.controller.graph_set.all %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% if tenant.get_association_graphs %}
+                <div class="tab-pane fade" id="pills-graphs-user-association" role="tabpanel"
+                     aria-labelledby="pills-graphs-user-association-tab">
+                    <div class="row">
+                        {% for graph in tenant.get_association_graphs %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if tenant.get_int_graphs %}
+                <div class="tab-pane fade" id="pills-graphs-int" role="tabpanel"
+                     aria-labelledby="pills-graphs-int-tab">
+                    <div class="row">
+                        {% for graph in tenant.get_int_graphs %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if tenant.get_throughput_graphs %}
+                <div class="tab-pane fade" id="pills-graphs-throughput" role="tabpanel" aria-labelledby="pills-graphs-throughput-tab">
+                    <div class="row">
+                        {% for graph in tenant.get_throughput_graphs %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if tenant.get_delay_graphs %}
+                <div class="tab-pane fade" id="pills-graphs-delay" role="tabpanel" aria-labelledby="pills-graphs-delay-tab">
+                    <div class="row">
+                        {% for graph in tenant.get_delay_graphs %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if tenant.get_mcda_graphs %}
+                <div class="tab-pane fade" id="pills-graphs-mcda" role="tabpanel" aria-labelledby="pills-graphs-mcda-tab">
+                    <div class="row">
+                        {% for graph in tenant.get_mcda_graphs %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if tenant.get_other_graphs %}
+                <div class="tab-pane fade" id="pills-graphs-other" role="tabpanel" aria-labelledby="pills-graphs-other-tab">
+                    <div class="row">
+                        {% for graph in tenant.get_other_graphs %}
+                            <div class="col-6 embed-responsive embed-responsive-16by9 live__scroll--box">
+                                <iframe class="embed-responsive-item" src="{{ graph.iframe_url }}"
+                                        frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+
